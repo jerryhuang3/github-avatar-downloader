@@ -13,8 +13,8 @@ function getRepoContributors(repoOwner, repoName, cb) {
     var options = {
         url: 'https://api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
         headers: {
-            'User-Agent': 'request',
-            'Authorization': token.GITHUB_TOKEN,
+            'User-Agent': 'jerryhuang3',
+            'Authorization': 'token ' + token.GITHUB_TOKEN,
         }
     };
     // Check for errors and status code during request
@@ -52,6 +52,12 @@ function downloadImageByURL(url, filePath) {
 if (repoOwner !== undefined && repoName !== undefined) {
     getRepoContributors(repoOwner, repoName, function (err, result) {
         console.log("Errors:", err);
+
+        // Create a directory called avatar if one does not exist.
+        var directory = './avatar';
+        if (!fs.existsSync(directory)){
+            fs.mkdirSync(directory);
+        }
         
         // Iterating parsed data and image download function; saving all avatar_url and login names
         for (var i = 0; i < result.length; i++) {
