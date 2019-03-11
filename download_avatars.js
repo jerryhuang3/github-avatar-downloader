@@ -38,7 +38,7 @@ function downloadImageByURL(url, filePath) {
             throw err;
         })
         .on('response', function (response) {
-            console.log('Downloading image...');
+            console.log('Downloading image');
             console.log('Response Code: ', response.statusCode, response.headers['content-type']);
         })
         // Write images to avatar folder
@@ -53,7 +53,7 @@ if (repoOwner !== undefined && repoName !== undefined) {
     getRepoContributors(repoOwner, repoName, function (err, result) {
         console.log("Errors:", err);
         
-        // Looping the data and logging each avatar_url and login entry
+        // Iterating parsed data and image download function; saving all avatar_url and login names
         for (var i = 0; i < result.length; i++) {
             var url = result[i].avatar_url;
             var name = result[i].login;
