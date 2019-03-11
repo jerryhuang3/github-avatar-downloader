@@ -1,7 +1,7 @@
 // Import modules
+require('dotenv').config();
 var request = require('request');
 var fs = require('fs');
-var token = require('./secrets.js');
 
 // Command line arguments for repository to stream from
 var repoOwner = process.argv[2];
@@ -13,8 +13,8 @@ function getRepoContributors(repoOwner, repoName, cb) {
     var options = {
         url: 'https://api.github.com/repos/' + repoOwner + '/' + repoName + '/contributors',
         headers: {
-            'User-Agent': 'jerryhuang3',
-            'Authorization': 'token ' + token.GITHUB_TOKEN,
+            'User-Agent': process.env.GITHUB_USER,
+            'Authorization': 'token ' + process.env.GITHUB_TOKEN,
         }
     };
     // Check for errors and status code during request
