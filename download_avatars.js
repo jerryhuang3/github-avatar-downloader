@@ -1,10 +1,9 @@
 var request = require('request');
 var fs = require('fs');
 var token = require('./secrets.js');
-console.log('Welcome to the GitHub Avatar Downloader!');
-console.log(token.GITHUB_TOKEN);
 
-//Command line input for repo owner and name
+
+//Require command line input for repo owner and name
 var repoOwner = process.argv[2];
 var repoName = process.argv[3];
 
@@ -22,7 +21,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
             throw err;
         };
         if (res.statusCode !== 200) {
-            console.log('Connection problem!');
+            console.log('Status: ' + res.statusCode + '. Connection problem! Check your inputs!');
         }
         //Parse through body of text and store in data object
         var data = JSON.parse(body);
@@ -47,14 +46,18 @@ function downloadImageByURL(url, filePath) {
             });
 }
 
-getRepoContributors(repoOwner, repoName, function(err, result) {
-    console.log('Errors:', err);
+if (repoOwner !== undefined && repoName !== undefined) {
+    console.log('Welcome to the GitHub Avatar Downloader!');
     
-    //Looping the data and logging each avatar_url and login entry
-    for (var i = 0; i < result.length; i++) {
-        var url = result[i].avatar_url;
-        var name = result[i].login;
-        downloadImageByURL(url, name);
-    };
-   
-});
+    getRepoContributors(repoOwner, repoName, function (err, result) {
+        //Looping the data and logging each avatar_url and login entry
+        for (var i = 0; i < result.length; i++) {
+            var url = result[i].avatar_url;
+            var name = result[i].login;
+            downloadImageByURL(url, name);
+        };
+    });
+} else {
+    console.log("Process terminated. Please provide both a valid repository owner and name.");
+    return;
+};
