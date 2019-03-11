@@ -13,23 +13,31 @@ function getRepoContributors(repoOwner, repoName, cb) {
             'Authorization': 'token ' + token.GITHUB_TOKEN,
         }
     };
-    //Stream the data and parsing it to a variable
+    //Check for errors and status code during request
     request(options, function(err, res, body) {
+        if (err) {
+            throw err;
+        };
+        if (res.statusCode !== 200) {
+            console.log('Connection problem!');
+        }
+        //Parse through body of text and store in data object
         var data = JSON.parse(body);
         cb(err, data);
         });
 }
-
 
 function downloadImageByURL(url, filePath) {
         request.get(url)
             .on('error', function (err) {
                 throw err;
             })
+            
             .on('response', function (response) {
                 console.log('Downloading image...');
-                console.log('Response Status Code: ', response.StatusCode, response.headers['content-type']);
+                console.log('Response Status Code: ', response.statusCode, response.headers['content-type']);
             })
+            
             .pipe(fs.createWriteStream('./avatar/' + filePath + '.jpg'))
             .on('finish', function () {
                 console.log('Download complete.');
